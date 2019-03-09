@@ -1,0 +1,12 @@
+@{
+    Layout = "_Layout";
+}
+
+@model TestApp.Models.EquipmentItemModel
+
+@using (Html.BeginForm("Order", "Cart", new {id=Model.Id}, FormMethod.Post, true, null))
+{
+    <p>Equipment Item: @Model.Name</p>
+    <p>Equipment Type: @Model.Type.ToString()</p>
+    <input type="submit" value="Order" />
+}

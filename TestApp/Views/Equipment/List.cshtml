@@ -1,0 +1,12 @@
+@{
+    Layout = "_Layout";
+}
+
+@model IEnumerable<TestApp.Models.EquipmentItemModel>
+
+<ul>
+    @foreach (var item in Model) 
+    {
+        <li> @item.Name - @item.Type.ToString() (@Html.ActionLink("Details", "Details", "Equipment", new { id=@item.Id }, null)) </li>
+    }
+</ul>
