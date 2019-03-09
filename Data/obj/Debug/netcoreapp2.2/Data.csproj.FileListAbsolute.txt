@@ -8,3 +8,4 @@ C:\Users\visin\Documents\Projects\Bondora\TestApp\Data\obj\Debug\netcoreapp2.2\D
 C:\Users\visin\Documents\Projects\Bondora\TestApp\Data\obj\Debug\netcoreapp2.2\Data.pdb
 C:\Users\visin\Documents\Projects\Bondora\TestApp\Data\bin\Debug\netcoreapp2.2\Data.runtimeconfig.json
 C:\Users\visin\Documents\Projects\Bondora\TestApp\Data\bin\Debug\netcoreapp2.2\Data.runtimeconfig.dev.json
+C:\Users\visin\Documents\Projects\Bondora\TestApp\Data\obj\Debug\netcoreapp2.2\Data.csprojAssemblyReference.cache

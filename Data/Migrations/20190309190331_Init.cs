@@ -28,9 +28,7 @@ namespace Data.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     DateCreated = table.Column<DateTime>(nullable: false),
-                    TotalPrice = table.Column<double>(nullable: false),
-                    Completed = table.Column<bool>(nullable: false),
-                    UserID = table.Column<int>(nullable: false)
+                    UserId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -44,6 +42,7 @@ namespace Data.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     DateAdded = table.Column<DateTime>(nullable: false),
+                    RentDurationInDays = table.Column<int>(nullable: false),
                     OrderId = table.Column<int>(nullable: false),
                     EquipmentId = table.Column<int>(nullable: false)
                 },

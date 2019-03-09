@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    [Migration("20190309153325_Init")]
+    [Migration("20190309190331_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,13 +37,9 @@ namespace Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<bool>("Completed");
-
                     b.Property<DateTime>("DateCreated");
 
-                    b.Property<double>("TotalPrice");
-
-                    b.Property<int>("UserID");
+                    b.Property<int>("UserId");
 
                     b.HasKey("Id");
 
@@ -60,6 +56,8 @@ namespace Data.Migrations
                     b.Property<int>("EquipmentId");
 
                     b.Property<int>("OrderId");
+
+                    b.Property<int>("RentDurationInDays");
 
                     b.HasKey("Id");
 

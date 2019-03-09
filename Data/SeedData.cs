@@ -7,8 +7,6 @@ namespace Data
     {
         public static void Initialize(StoreContext context)
         {
-            context.Database.EnsureCreated();
-
             if (context.EquipmentItems.Any())
             {
                 return;
@@ -16,11 +14,11 @@ namespace Data
 
             var equipmentItems = new[]
             {
-                new EquipmentItem {Name = "Caterpillar bulldozer", Type = EquipmentType.Heavy},
-                new EquipmentItem {Name = "KamAZ truck", Type = EquipmentType.Regular},
-                new EquipmentItem {Name = "Komatsu crane", Type = EquipmentType.Heavy},
-                new EquipmentItem {Name = "Volvo steamroller", Type = EquipmentType.Regular},
-                new EquipmentItem {Name = "Bosch jackhammer", Type = EquipmentType.Specialized}
+                new EquipmentItem("Caterpillar bulldozer", EquipmentType.Heavy),
+                new EquipmentItem("KamAZ truck", EquipmentType.Regular),
+                new EquipmentItem("Komatsu crane", EquipmentType.Heavy),
+                new EquipmentItem("Volvo steamroller", EquipmentType.Regular),
+                new EquipmentItem("Bosch jackhammer", EquipmentType.Specialized)
             };
 
             foreach (var item in equipmentItems)

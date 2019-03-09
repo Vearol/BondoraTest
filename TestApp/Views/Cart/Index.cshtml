@@ -14,11 +14,12 @@
             {
                 <td> @item.EquipmentItemModel.Name </td>
                 <td> @item.EquipmentItemModel.Type.ToString() </td>
+                <td> @item.RentDurationInDays days </td>
                 <td> <input type="submit" value="Remove" /> </td>
             }
             </tr>
         }
         
     </table>
-    @Html.ActionLink("ShowInvoice", "ShowInvoice", "Cart")
+    @Html.ActionLink("Show Invoice", "ShowInvoice", "Cart")
 </ul>

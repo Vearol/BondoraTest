@@ -15,5 +15,11 @@ namespace Data.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public EquipmentType Type { get;set; }
+
+        public EquipmentItem(string name, EquipmentType type)
+        {
+            Name = name;
+            Type = type;
+        }
     }
 }
