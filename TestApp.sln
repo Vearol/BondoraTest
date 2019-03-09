@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceLogic", "PriceLogic\Pr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data", "Data\Data.csproj", "{8CF18A9E-A8CE-4DE2-A47B-A9FBEB16C65A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceLogic.Tests", "PriceLogic.Tests\PriceLogic.Tests.csproj", "{310CC7BB-03EB-4815-9171-00832C4CA6D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp.Tests", "TestApp.Tests\TestApp.Tests.csproj", "{F7B74960-149E-487D-9389-5AAAEC69699B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{8CF18A9E-A8CE-4DE2-A47B-A9FBEB16C65A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8CF18A9E-A8CE-4DE2-A47B-A9FBEB16C65A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8CF18A9E-A8CE-4DE2-A47B-A9FBEB16C65A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{310CC7BB-03EB-4815-9171-00832C4CA6D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{310CC7BB-03EB-4815-9171-00832C4CA6D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{310CC7BB-03EB-4815-9171-00832C4CA6D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{310CC7BB-03EB-4815-9171-00832C4CA6D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7B74960-149E-487D-9389-5AAAEC69699B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7B74960-149E-487D-9389-5AAAEC69699B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7B74960-149E-487D-9389-5AAAEC69699B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7B74960-149E-487D-9389-5AAAEC69699B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

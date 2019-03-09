@@ -124,7 +124,7 @@ namespace TestApp.Controllers
 
         public IActionResult ShowInvoice()
         {
-            return View(new InvoiceModel(_invoice.GetInvoiceHtmlString()));
+            return View(new InvoiceModel(_invoice.GenerateInvoiceHtmlString()));
         }
 
         public IActionResult DownloadInvoice()

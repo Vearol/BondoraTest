@@ -48,7 +48,7 @@ namespace PriceLogic.Invoice
             _invoiceHtmlString = new HtmlString(invoiceHtlmStringBuilder.ToString());
         }
 
-        public HtmlString GetInvoiceHtmlString()
+        public HtmlString GenerateInvoiceHtmlString()
         {
             if (_invoiceHtmlString == null) 
                 GenerateInvoice();
