@@ -1,0 +1,14 @@
+C:\Users\visin\Documents\Projects\Bondora\TestApp\PriceLogic\bin\Debug\netcoreapp2.2\PriceLogic.deps.json
+C:\Users\visin\Documents\Projects\Bondora\TestApp\PriceLogic\bin\Debug\netcoreapp2.2\PriceLogic.dll
+C:\Users\visin\Documents\Projects\Bondora\TestApp\PriceLogic\bin\Debug\netcoreapp2.2\PriceLogic.pdb
+C:\Users\visin\Documents\Projects\Bondora\TestApp\PriceLogic\obj\Debug\netcoreapp2.2\PriceLogic.csprojAssemblyReference.cache
+C:\Users\visin\Documents\Projects\Bondora\TestApp\PriceLogic\obj\Debug\netcoreapp2.2\PriceLogic.csproj.CoreCompileInputs.cache
+C:\Users\visin\Documents\Projects\Bondora\TestApp\PriceLogic\obj\Debug\netcoreapp2.2\PriceLogic.AssemblyInfoInputs.cache
+C:\Users\visin\Documents\Projects\Bondora\TestApp\PriceLogic\obj\Debug\netcoreapp2.2\PriceLogic.AssemblyInfo.cs
+C:\Users\visin\Documents\Projects\Bondora\TestApp\PriceLogic\obj\Debug\netcoreapp2.2\PriceLogic.dll
+C:\Users\visin\Documents\Projects\Bondora\TestApp\PriceLogic\obj\Debug\netcoreapp2.2\PriceLogic.pdb
+C:\Users\visin\Documents\Projects\Bondora\TestApp\PriceLogic\bin\Debug\netcoreapp2.2\Data.dll
+C:\Users\visin\Documents\Projects\Bondora\TestApp\PriceLogic\bin\Debug\netcoreapp2.2\Data.pdb
+C:\Users\visin\Documents\Projects\Bondora\TestApp\PriceLogic\obj\Debug\netcoreapp2.2\PriceLogic.csproj.CopyComplete
+C:\Users\visin\Documents\Projects\Bondora\TestApp\PriceLogic\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.Html.Abstractions.dll
+C:\Users\visin\Documents\Projects\Bondora\TestApp\PriceLogic\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.Html.Abstractions.xml

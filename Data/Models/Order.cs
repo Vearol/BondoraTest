@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace TestApp.Data.Models
+namespace Data.Models
 {
     public class Order
     {

@@ -5,8 +5,14 @@
 @model IEnumerable<TestApp.Models.EquipmentItemModel>
 
 <ul>
-    @foreach (var item in Model) 
+    <table>
+    @foreach (var item in Model)
     {
-        <li> @item.Name - @item.Type.ToString() (@Html.ActionLink("Details", "Details", "Equipment", new { id=@item.Id }, null)) </li>
+        <tr>
+            <td> @item.Name </td>
+            <td> @item.Type.ToString() </td>
+            <td> (@Html.ActionLink("Details", "Details", "Equipment", new { id = @item.Id }, null)) </td>
+        </tr>  
     }
+    </table>
 </ul>

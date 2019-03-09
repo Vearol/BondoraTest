@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 
-namespace MvcTest.Data
+namespace Data
 {
     public class Session
     {
@@ -17,10 +17,11 @@ namespace MvcTest.Data
         }
 
         public int ID { get; set; }
-        public DateTime StartTime { get; set; }
 
+        private DateTime StartTime { get; set; }
         private static int SSID = 0;
-        public static int NextID()
+
+        private static int NextID()
         {
             return Interlocked.Increment(ref SSID);
         }

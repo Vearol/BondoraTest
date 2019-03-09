@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using TestApp.Data.Models;
+using Data.Models;
 
-namespace TestApp.Data
+namespace Data
 {
     public static class SeedData
     {

@@ -1,10 +1,10 @@
 ﻿using System;
+using Data;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using TestApp.Data;
 
 namespace TestApp
 {
@@ -19,26 +19,23 @@ namespace TestApp
             host.Run();
         }
 
-        public static void InitializeDb(IWebHost host)
+        private static void InitializeDb(IWebHost host)
         {
-            using (var scope = host.Services.CreateScope())
+            try
             {
-                var services = scope.ServiceProvider;
-
-                try
-                {
-                    var context = services.GetRequiredService<StoreContext>();
-                    context.Database.Migrate();
-                    SeedData.Initialize(context);
-                }
-                catch (Exception)
-                {
-                    // TODO: log exception
-                }
+                var storeContextFactory = new StoreContextFactory();
+                var context = storeContextFactory.CreateDbContext(null);
+                context.Database.Migrate();
+                SeedData.Initialize(context);
+            }
+            catch (Exception)
+            {
+                throw new Exception("Cannot initialize database.");
             }
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+
+        private static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureLogging(logging =>
                 {

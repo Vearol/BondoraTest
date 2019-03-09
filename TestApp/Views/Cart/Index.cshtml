@@ -5,17 +5,20 @@
 @model IEnumerable<TestApp.Models.OrderItemModel>
 
 <ul>
-    @foreach (var item in Model) 
-    {
-        // TODO: fix lazy joins on every loop iteration with equipments table
-        <li> 
-            @using (Html.BeginForm("Remove", "Cart", new {id=item.Id}, FormMethod.Post, true, null))
+    <table>
+        @foreach (var item in Model)
+        {
+            <tr>
+
+            @using (Html.BeginForm("Remove", "Cart", new { id = item.Id }, FormMethod.Post, true, null))
             {
-                <div>
-                    @item.EquipmentItemModel.Name - @item.EquipmentItemModel.Type.ToString() 
-                    <input type="submit" value="Remove" />
-                </div>
+                <td> @item.EquipmentItemModel.Name </td>
+                <td> @item.EquipmentItemModel.Type.ToString() </td>
+                <td> <input type="submit" value="Remove" /> </td>
             }
-        </li>
-    }
+            </tr>
+        }
+        
+    </table>
+    @Html.ActionLink("ShowInvoice", "ShowInvoice", "Cart")
 </ul>

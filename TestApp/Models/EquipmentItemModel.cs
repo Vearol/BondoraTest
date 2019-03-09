@@ -1,4 +1,4 @@
-using TestApp.Data.Models;
+using Data.Models;
 
 namespace TestApp.Models
 {
