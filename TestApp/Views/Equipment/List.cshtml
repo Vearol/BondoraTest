@@ -5,14 +5,22 @@
 @model IEnumerable<TestApp.Models.EquipmentItemModel>
 
 <ul>
-    <table>
-    @foreach (var item in Model)
-    {
+    <table class="table-striped">
+        <thead>
         <tr>
-            <td> @item.Name </td>
-            <td> @item.Type.ToString() </td>
-            <td> (@Html.ActionLink("Details", "Details", "Equipment", new { id = @item.Id }, null)) </td>
-        </tr>  
-    }
+            <th>Name</th>
+            <th>Type</th>
+            <th>Details</th>
+        </tr>
+        </thead>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td> @item.Name </td>
+                <td> @item.Type.ToString() </td>
+                <td> (@Html.ActionLink("Details", "Details", "Equipment", new {id = @item.Id}, null)) </td>
+            </tr>
+        }
     </table>
 </ul>

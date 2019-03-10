@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -10,6 +11,7 @@ using TestApp.Models;
 
 namespace TestApp.Controllers
 {
+    [Authorize]
     public class EquipmentController : Controller
     {
         private readonly StoreContextFactory _contextFactory;
@@ -23,6 +25,7 @@ namespace TestApp.Controllers
             _logger = logger;
         }
 
+        [AllowAnonymous]
         public IActionResult List()
         {
             Session session = null;
@@ -48,6 +51,7 @@ namespace TestApp.Controllers
             }
         }
 
+        [AllowAnonymous]
         public IActionResult Details(int id)
         {
             _logger.LogDebug($"Requested details about product {id}");

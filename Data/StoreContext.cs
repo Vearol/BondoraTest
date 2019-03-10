@@ -14,6 +14,13 @@ namespace Data
         public DbSet<EquipmentItem> EquipmentItems { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<User> Users { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Order>().HasMany<OrderItem>(m => m.OrderItems).WithOne(m => m.Order)
+                .OnDelete(DeleteBehavior.Cascade);
+        }
     }
 
     public class StoreContextFactory : IDesignTimeDbContextFactory<StoreContext>
@@ -27,3 +34,4 @@ namespace Data
         }
     }
 }
+

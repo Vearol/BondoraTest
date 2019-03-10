@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Data.Models;
 using NUnit.Framework;
 
@@ -9,7 +10,7 @@ namespace PriceLogic.Tests.Invoice
         [Test]
         public void InvoiceHtmlStringWithEmptyOrder()
         {
-            var testInvoice = new PriceLogic.Invoice.Invoice(123, new OrderItem[0]);
+            var testInvoice = new PriceLogic.Invoice.Invoice(123, new List<OrderItem>());
 
             var expected = "<table><tr> <td width=100px>Total price: 0$ </td> </tr></table>";
 
@@ -19,7 +20,7 @@ namespace PriceLogic.Tests.Invoice
         [Test]
         public void InvoiceTextWithEmptyOrder()
         {
-            var testInvoice = new PriceLogic.Invoice.Invoice(123, new OrderItem[0]);
+            var testInvoice = new PriceLogic.Invoice.Invoice(123, new List<OrderItem>());
 
             var expected = "Invoice for order id: 123\nTotal price: 0$";
 

@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using PriceLogic.Invoice;
+using PriceLogic.Rent;
 using TestApp.Models;
 
 namespace TestApp.Controllers
@@ -20,7 +21,7 @@ namespace TestApp.Controllers
         private readonly StoreContextFactory _contextFactory;
         private readonly ILogger _logger;
 
-        private static Invoice _invoice;
+        private static Dictionary<int, Invoice> _userInvoices = new Dictionary<int, Invoice>();
         
         public CartController(ILogger<CartController> logger)
         {
@@ -48,9 +49,9 @@ namespace TestApp.Controllers
                 {
                     var orderItems = context.OrderItems
                         .Include(oi => oi.Equipment)
-                        .Where(oi => oi.OrderId == order.Id).ToArray();
+                        .Where(oi => oi.OrderId == order.Id).ToList();
 
-                    _invoice = new Invoice(order.Id, orderItems);
+                    _userInvoices[session.ID] = new Invoice(order.Id, orderItems);
 
                     orderItemsModel = orderItems.Select(oi => new OrderItemModel(oi.Id, oi.RentDurationInDays, 
                         new EquipmentItemModel(oi.Equipment))).ToList();
@@ -124,12 +125,65 @@ namespace TestApp.Controllers
 
         public IActionResult ShowInvoice()
         {
-            return View(new InvoiceModel(_invoice.GenerateInvoiceHtmlString()));
+            var sessionData = HttpContext.Session.GetString(Session.Key);
+            if (string.IsNullOrEmpty(sessionData))
+            {
+                _logger.LogError("Attempt to make an order before accessing products list");
+                return StatusCode(500);
+            }
+            var session = JsonConvert.DeserializeObject<Session>(sessionData);
+
+            return View(new InvoiceModel(_userInvoices[session.ID].GenerateInvoiceHtmlString()));
         }
 
         public IActionResult DownloadInvoice()
         {
-            return File(Encoding.UTF8.GetBytes(_invoice.GenerateInvoiceText()), "text/plain", "invoice.txt"); ;
+            var sessionData = HttpContext.Session.GetString(Session.Key);
+            if (string.IsNullOrEmpty(sessionData))
+            {
+                _logger.LogError("Attempt to make an order before accessing products list");
+                return StatusCode(500);
+            }
+            var session = JsonConvert.DeserializeObject<Session>(sessionData);
+            return File(Encoding.UTF8.GetBytes(_userInvoices[session.ID].GenerateInvoiceText()), "text/plain", "invoice.txt"); ;
+        }
+
+        public IActionResult Checkout()
+        {
+            var sessionData = HttpContext.Session.GetString(Session.Key);
+            if (string.IsNullOrEmpty(sessionData))
+            {
+                _logger.LogError("Attempt to make an order before accessing products list");
+                return StatusCode(500);
+            }
+
+            var session = JsonConvert.DeserializeObject<Session>(sessionData);
+            
+            using (var context = _contextFactory.CreateDbContext(null))
+            {
+                if (User.Identity.IsAuthenticated)
+                {
+                    var user = context.Users.FirstOrDefault(u => u.LoginNickname == User.Identity.Name);
+                    if (user != null)
+                    {
+                        var orderItems = _userInvoices[session.ID].GetOrderItems();
+
+                        var loyaltyPoints = orderItems.Select(orderItem => new RentFee(orderItem.Equipment.Type, orderItem.RentDurationInDays))
+                                                      .Select(rentFee => rentFee.CalculateLoyaltyPoints()).Sum();
+                        user.ExtraPoints += loyaltyPoints;
+                    }
+                }
+
+                var orderToDelete = context.Orders.FirstOrDefault(o => o.UserId == session.ID);
+                if (orderToDelete != null)
+                {
+                    context.Orders.Remove(orderToDelete);
+
+                    context.SaveChanges();
+                }
+            }
+
+            return RedirectToAction("ShowInvoice", "Cart");
         }
     }
 }

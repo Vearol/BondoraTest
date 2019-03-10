@@ -11,5 +11,10 @@
 
             return defaultFee;
         }
+
+        public int CalculateLoyaltyPoints(int numberOfDays)
+        {
+            return numberOfDays;
+        }
     }
 }

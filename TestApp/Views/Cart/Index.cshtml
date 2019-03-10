@@ -10,16 +10,17 @@
         {
             <tr>
 
-            @using (Html.BeginForm("Remove", "Cart", new { id = item.Id }, FormMethod.Post, true, null))
-            {
-                <td> @item.EquipmentItemModel.Name </td>
-                <td> @item.EquipmentItemModel.Type.ToString() </td>
-                <td> @item.RentDurationInDays days </td>
-                <td> <input type="submit" value="Remove" /> </td>
-            }
+                @using (Html.BeginForm("Remove", "Cart", new { id = item.Id }, FormMethod.Post, true, null))
+                {
+                    <td> @item.EquipmentItemModel.Name </td>
+                    <td> @item.EquipmentItemModel.Type.ToString() </td>
+                    <td> @item.RentDurationInDays days </td>
+                    <td> <input type="submit" value="Remove" /> </td>
+                }
             </tr>
         }
-        
+
     </table>
     @Html.ActionLink("Show Invoice", "ShowInvoice", "Cart")
+    @Html.ActionLink("Checkout", "Checkout", "Cart")
 </ul>

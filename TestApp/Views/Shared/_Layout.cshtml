@@ -2,16 +2,18 @@
 
 <html>
 <head>
-    <title>My store</title>
+    <title>Store</title>
 </head>
 <body>
-    
+
     <div id="header">
         <h1>Equipment Rent</h1>
         @Html.ActionLink("Products", "List", "Equipment")
         @Html.ActionLink("Cart", "Index", "Cart")
-    </div>
+        @(User.Identity.IsAuthenticated ? Html.ActionLink("Logout", "Logout", "Account") : Html.ActionLink("Login", "Login", "Account"))
 
+    </div>
+    
     <div id="content">
         @RenderBody()
     </div>

@@ -4,7 +4,7 @@ using PriceLogic.Rent.EquipmentRent;
 
 namespace PriceLogic.Rent
 {
-    public class RentFee : IFee
+    public class RentFee : IFee, IBonus
     {
         private EquipmentType _equipmentType;
         private int _numberOfDays;
@@ -25,6 +25,11 @@ namespace PriceLogic.Rent
         public float CalculateFee()
         {
             return _equipmentTypePrice[_equipmentType].CalculatePrice(_numberOfDays);
+        }
+
+        public int CalculateLoyaltyPoints()
+        {
+            return _equipmentTypePrice[_equipmentType].CalculateLoyaltyPoints(_numberOfDays);
         }
     }
 }

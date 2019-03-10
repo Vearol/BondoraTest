@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 using Data.Models;
 using Microsoft.AspNetCore.Html;
 using PriceLogic.Rent;
@@ -7,12 +8,12 @@ namespace PriceLogic.Invoice
 {
     public class Invoice
     {
-        private OrderItem[] _orderItems;
+        private List<OrderItem> _orderItems;
         private HtmlString _invoiceHtmlString;
         private float _priceSum;
         private int _orderId;
 
-        public Invoice(int orderId, OrderItem[] orderItems)
+        public Invoice(int orderId, List<OrderItem> orderItems)
         {
             _orderId = orderId;
             _orderItems = orderItems;
@@ -24,7 +25,7 @@ namespace PriceLogic.Invoice
 
             invoiceHtlmStringBuilder.Append("<table>");
 
-            for (var i = 0; i < _orderItems.Length; i++)
+            for (var i = 0; i < _orderItems.Count; i++)
             {
                 var currentItem = _orderItems[i];
                 var rentFee = new RentFee(currentItem.Equipment.Type, currentItem.RentDurationInDays).CalculateFee();
@@ -60,7 +61,7 @@ namespace PriceLogic.Invoice
         {
             var invoiceStringBuilder = new StringBuilder($"Invoice for order id: {_orderId}\n");
 
-            for (var i = 0; i < _orderItems.Length; i++)
+            for (var i = 0; i < _orderItems.Count; i++)
             {
                 var currentItem = _orderItems[i];
                 var rentFee = new RentFee(currentItem.Equipment.Type, currentItem.RentDurationInDays).CalculateFee();
@@ -71,6 +72,16 @@ namespace PriceLogic.Invoice
             invoiceStringBuilder.Append($"Total price: {_priceSum}$");
 
             return invoiceStringBuilder.ToString();
+        }
+
+        public List<OrderItem> GetOrderItems()
+        {
+            return _orderItems;
+        }
+
+        public void AddToOrder(IEnumerable<OrderItem> orderItems)
+        {
+            _orderItems.AddRange(orderItems);
         }
     }
 }
