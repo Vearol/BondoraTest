@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using Data;
+using Data.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,12 +15,12 @@ namespace TestApp.Controllers
     [Authorize]
     public class EquipmentController : Controller
     {
-        private readonly StoreContextFactory _contextFactory;
+        private readonly IEquipmentItemRepository _equipmentItemRepository;
         private readonly ILogger _logger;
 
-        public EquipmentController(ILogger<EquipmentController> logger)
+        public EquipmentController(ILogger<EquipmentController> logger, IEquipmentItemRepository equipmentItemRepository)
         {
-            _contextFactory = new StoreContextFactory();
+            _equipmentItemRepository = equipmentItemRepository;
 
             Debug.Assert(logger != null);
             _logger = logger;
@@ -43,12 +44,9 @@ namespace TestApp.Controllers
                 _logger.LogInformation($"Handling user {session.ID} listing");
             }
 
-            using (var context = _contextFactory.CreateDbContext(null))
-            {
-                var equipmentItemModelList = context.EquipmentItems.Select(x => new EquipmentItemModel(x.Id, x.Name, x.Type)).ToArray();
+            var equipmentItemModelList = _equipmentItemRepository.GetAll().Select(x => new EquipmentItemModel(x.Id, x.Name, x.Type)).ToArray();
 
-                return View(equipmentItemModelList);
-            }
+            return View(equipmentItemModelList);
         }
 
         [AllowAnonymous]
@@ -56,19 +54,16 @@ namespace TestApp.Controllers
         {
             _logger.LogDebug($"Requested details about product {id}");
 
-            using (var context = _contextFactory.CreateDbContext(null))
+            var equipmentItem = _equipmentItemRepository.GetById(id);
+
+            if (equipmentItem == null)
             {
-                var equipmentItem = context.EquipmentItems.FirstOrDefault(x => x.Id == id);
-
-                if (equipmentItem == null)
-                {
-                    throw new Exception($"Cannot find equipment item with id={id}");
-                }
-
-                var equipmentItemModel = new EquipmentItemModel(equipmentItem);
-
-                return View(equipmentItemModel);
+                throw new Exception($"Cannot find equipment item with id={id}");
             }
+
+            var equipmentItemModel = new EquipmentItemModel(equipmentItem);
+
+            return View(equipmentItemModel);
         }
     }
 }

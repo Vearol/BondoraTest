@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Data;
+using Data.Interfaces;
 using Data.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,14 +19,19 @@ namespace TestApp.Controllers
 {
     public class CartController: Controller
     {
-        private readonly StoreContextFactory _contextFactory;
+        private readonly IOrderItemRepository _orderItemRepository;
+        private readonly IOrderRepository _orderRepository;
+        private readonly IUserRepository _userRepository;
         private readonly ILogger _logger;
 
         private static Dictionary<int, Invoice> _userInvoices = new Dictionary<int, Invoice>();
         
-        public CartController(ILogger<CartController> logger)
+        public CartController(ILogger<CartController> logger, IOrderItemRepository orderItemRepository, 
+            IOrderRepository orderRepository, IUserRepository userRepository)
         {
-            _contextFactory = new StoreContextFactory();
+            _orderItemRepository = orderItemRepository;
+            _orderRepository = orderRepository;
+            _userRepository = userRepository;
 
             Debug.Assert(logger != null);
             _logger = logger;
@@ -40,29 +46,26 @@ namespace TestApp.Controllers
                 return StatusCode(500);
             }
 
-            using (var context = _contextFactory.CreateDbContext(null))
+            var session = JsonConvert.DeserializeObject<Session>(sessionData);
+            var order = _orderRepository.GetBy(o => o.UserId == session.ID).FirstOrDefault();
+            var orderItemsModel = new List<OrderItemModel>();
+            if (order != null)
             {
-                var session = JsonConvert.DeserializeObject<Session>(sessionData);
-                var order = context.Orders.FirstOrDefault(o => o.UserId == session.ID);
-                var orderItemsModel = new List<OrderItemModel>();
-                if (order != null)
-                {
-                    var orderItems = context.OrderItems
-                        .Include(oi => oi.Equipment)
-                        .Where(oi => oi.OrderId == order.Id).ToList();
+                var orderItems = _orderItemRepository.GetBy(oi => oi.OrderId == order.Id)
+                    .Include(oi => oi.Equipment).ToList();
 
-                    _userInvoices[session.ID] = new Invoice(order.Id, orderItems);
+                _userInvoices[session.ID] = new Invoice(order.Id, orderItems);
 
-                    orderItemsModel = orderItems.Select(oi => new OrderItemModel(oi.Id, oi.RentDurationInDays, 
-                        new EquipmentItemModel(oi.Equipment))).ToList();
-                }
-                else
-                {
-                    _logger.LogError($"No orders exist for user {session.ID}");
-                }
-
-                return View(orderItemsModel);
+                orderItemsModel = orderItems.Select(oi => new OrderItemModel(oi.Id, oi.RentDurationInDays,
+                    new EquipmentItemModel(oi.Equipment))).ToList();
             }
+            else
+            {
+                _logger.LogError($"No orders exist for user {session.ID}");
+            }
+
+            return View(orderItemsModel);
+            
         }
 
         [HttpPost]
@@ -79,23 +82,21 @@ namespace TestApp.Controllers
 
             var session = JsonConvert.DeserializeObject<Session>(sessionData);
 
-            using (var context = _contextFactory.CreateDbContext(null))
+            var order = _orderRepository.GetBy(o => o.UserId == session.ID).FirstOrDefault();
+            if (order == null)
             {
-                var order = context.Orders.FirstOrDefault(o => o.UserId == session.ID);
-                if (order == null)
-                {
-                    _logger.LogInformation($"Creating order placeholder for user ${session.ID}");
-                    order = new Order(DateTime.UtcNow, session.ID);
-                    context.Orders.Add(order);
-                    context.SaveChanges();
-                }
-
-                context.OrderItems.Add(new OrderItem(DateTime.UtcNow, numberOfDays, order.Id, id));
-                context.SaveChanges();
-                _logger.LogInformation($"Added order item {id} for user's {session.ID} cart");
-
-                return RedirectToAction("Index");
+                _logger.LogInformation($"Creating order placeholder for user ${session.ID}");
+                order = new Order(DateTime.UtcNow, session.ID);
+                _orderRepository.Create(order);
+                _orderRepository.Save();
             }
+
+            _orderItemRepository.Create(new OrderItem(DateTime.UtcNow, numberOfDays, order.Id, id));
+            _orderItemRepository.Save();
+            _logger.LogInformation($"Added order item {id} for user's {session.ID} cart");
+
+            return RedirectToAction("Index");
+            
         }
 
         [HttpPost]
@@ -109,18 +110,16 @@ namespace TestApp.Controllers
             }
 
             var session = JsonConvert.DeserializeObject<Session>(sessionData);
+
+            var orderToDelete = _orderItemRepository.GetById(id);
+
+            _orderItemRepository.Delete(orderToDelete);
+            _orderItemRepository.Save();
+
+            _logger.LogInformation($"Removed order item {id} for user's {session.ID} cart");
+
+            return RedirectToAction("Index");
             
-            using (var context = _contextFactory.CreateDbContext(null))
-            {
-                var orderToDelete = context.OrderItems.First(oi => oi.Id == id);
-
-                context.OrderItems.Remove(orderToDelete);
-                context.SaveChanges();
-
-                _logger.LogInformation($"Removed order item {id} for user's {session.ID} cart");
-
-                return RedirectToAction("Index");
-            }
         }
 
         public IActionResult ShowInvoice()
@@ -158,29 +157,26 @@ namespace TestApp.Controllers
             }
 
             var session = JsonConvert.DeserializeObject<Session>(sessionData);
-            
-            using (var context = _contextFactory.CreateDbContext(null))
+
+            if (User.Identity.IsAuthenticated)
             {
-                if (User.Identity.IsAuthenticated)
+                var user = _userRepository.GetBy(u => u.LoginNickname == User.Identity.Name).FirstOrDefault();
+                if (user != null)
                 {
-                    var user = context.Users.FirstOrDefault(u => u.LoginNickname == User.Identity.Name);
-                    if (user != null)
-                    {
-                        var orderItems = _userInvoices[session.ID].GetOrderItems();
+                    var orderItems = _userInvoices[session.ID].GetOrderItems();
 
-                        var loyaltyPoints = orderItems.Select(orderItem => new RentFee(orderItem.Equipment.Type, orderItem.RentDurationInDays))
-                                                      .Select(rentFee => rentFee.CalculateLoyaltyPoints()).Sum();
-                        user.ExtraPoints += loyaltyPoints;
-                    }
+                    var loyaltyPoints = orderItems.Select(orderItem =>
+                            new RentFee(orderItem.Equipment.Type, orderItem.RentDurationInDays))
+                        .Select(rentFee => rentFee.CalculateLoyaltyPoints()).Sum();
+                    user.ExtraPoints += loyaltyPoints;
                 }
+            }
 
-                var orderToDelete = context.Orders.FirstOrDefault(o => o.UserId == session.ID);
-                if (orderToDelete != null)
-                {
-                    context.Orders.Remove(orderToDelete);
-
-                    context.SaveChanges();
-                }
+            var orderToDelete = _orderRepository.GetBy(o => o.UserId == session.ID).FirstOrDefault();
+            if (orderToDelete != null)
+            {
+                 _orderRepository.Delete(orderToDelete);
+                _orderRepository.Save();
             }
 
             return RedirectToAction("ShowInvoice", "Cart");

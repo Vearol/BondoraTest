@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Data;
+using Data.Interfaces;
 using Data.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using TestApp.Models;
 
@@ -17,12 +15,12 @@ namespace TestApp.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly StoreContextFactory _contextFactory;
+        private readonly IUserRepository _userRepository;
         private readonly ILogger _logger;
 
-        public AccountController(ILogger<CartController> logger)
+        public AccountController(ILogger<CartController> logger, IUserRepository userRepository)
         {
-            _contextFactory = new StoreContextFactory();
+            _userRepository = userRepository;
 
             Debug.Assert(logger != null);
             _logger = logger;
@@ -38,24 +36,20 @@ namespace TestApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginModel model)
         {
-            using (var context = _contextFactory.CreateDbContext(null))
+            if (ModelState.IsValid)
             {
-                if (ModelState.IsValid)
+                var user = _userRepository.GetBy(u => u.LoginNickname == model.LoginNickname && u.Password == model.Password).FirstOrDefault();
+                if (user != null)
                 {
-                    var user = await context.Users.FirstOrDefaultAsync(u =>
-                        u.LoginNickname == model.LoginNickname && u.Password == model.Password);
-                    if (user != null)
-                    {
-                        await Authenticate(model.LoginNickname);
+                    await Authenticate(model.LoginNickname);
 
-                        return RedirectToAction("List", "Equipment");
-                    }
-
-                    ModelState.AddModelError("", "Wrong login or password");
+                    return RedirectToAction("List", "Equipment");
                 }
 
-                return View(model);
+                ModelState.AddModelError("", "Wrong login or password");
             }
+
+            return View(model);
         }
 
         [HttpGet]
@@ -68,26 +62,23 @@ namespace TestApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterModel model)
         {
-            using (var context = _contextFactory.CreateDbContext(null))
+            if (ModelState.IsValid)
             {
-                if (ModelState.IsValid)
+                var user = _userRepository.GetBy(u => u.LoginNickname == model.LoginNickname && u.Password == model.Password).FirstOrDefault();
+                if (user == null)
                 {
-                    var user = await context.Users.FirstOrDefaultAsync(u => u.LoginNickname == model.LoginNickname);
-                    if (user == null)
-                    {
-                        context.Users.Add(new User(model.LoginNickname, model.Password));
-                        await context.SaveChangesAsync();
+                    _userRepository.Create(new User(model.LoginNickname, model.Password));
+                    _userRepository.Save();
 
-                        await Authenticate(model.LoginNickname);
+                    await Authenticate(model.LoginNickname);
 
-                        return RedirectToAction("List", "Equipment");
-                    }
-
-                    ModelState.AddModelError("", "Wrong login or password");
+                    return RedirectToAction("List", "Equipment");
                 }
 
-                return View(model);
+                ModelState.AddModelError("", "Wrong login or password");
             }
+
+            return View(model);
         }
 
         private async Task Authenticate(string userName)
