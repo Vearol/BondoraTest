@@ -1,28 +1,30 @@
 ﻿@model TestApp.Models.RegisterModel
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
 <h2>Register</h2>
 
 <form asp-action="Register" asp-controller="Account" asp-anti-forgery="true">
     <div class="validation" asp-validation-summary="ModelOnly" />
     <div>
         <div>
-            <label asp-for="LoginNickname">Enter login nickname</label><br />
-            <input type="text" asp-for="LoginNickname" />
+            <label for="login" asp-for="LoginNickname">Enter login nickname</label><br />
+            <input type="text" class="form-control" asp-for="LoginNickname" id="login" />
             <span asp-validation-for="LoginNickname" />
         </div>
         <div>
-            <label asp-for="Password">Enter password</label><br />
-            <input asp-for="Password" />
+            <label for="password" asp-for="Password">Enter password</label><br />
+            <input class="form-control" asp-for="Password" id="password" />
             <span asp-validation-for="Password" />
         </div>
         <div>
-            <label asp-for="ConfirmPassword">Confirm password</label><br />
-            <input asp-for="ConfirmPassword" />
+            <label for="confirmPassword" asp-for="ConfirmPassword">Confirm password</label><br />
+            <input class="form-control" asp-for="ConfirmPassword" id="confirmPassword" />
             <span asp-validation-for="ConfirmPassword" />
         </div>
         <div>
-            <input type="submit" value="Register" />
+            <input type="submit" class="btn btn-success" value="Register" />
         </div>
     </div>
 </form>

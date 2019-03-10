@@ -3,19 +3,29 @@
 }
 
 @model IEnumerable<TestApp.Models.OrderItemModel>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
 <ul>
-    <table>
+    <table class="table-striped">
+        <thead>
+            <tr>
+                <th style="width: 200px">Name</th>
+                <th style="width: 150px">Type</th>
+                <th style="width: 150px">Duration</th>
+                <th>Remove</th>
+            </tr>
+        </thead>
+
         @foreach (var item in Model)
         {
             <tr>
 
-                @using (Html.BeginForm("Remove", "Cart", new { id = item.Id }, FormMethod.Post, true, null))
+                @using (Html.BeginForm("Remove", "Cart", new {id = item.Id}, FormMethod.Post, true, null))
                 {
                     <td> @item.EquipmentItemModel.Name </td>
                     <td> @item.EquipmentItemModel.Type.ToString() </td>
                     <td> @item.RentDurationInDays days </td>
-                    <td> <input type="submit" value="Remove" /> </td>
+                    <td> <input type="submit" value="Remove"/> </td>
                 }
             </tr>
         }

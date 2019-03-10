@@ -1,6 +1,8 @@
 ﻿@model TestApp.Models.LoginModel
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
 <h2>Login page</h2>
 
 <a asp-action="Register" asp-controller="Account">Register</a>
@@ -10,16 +12,16 @@
     <div>
         <div class="form-group">
             <label asp-for="LoginNickname">Enter login</label>
-            <input type="text" asp-for="LoginNickname" />
+            <input type="text" class="form-control" asp-for="LoginNickname" />
             <span asp-validation-for="LoginNickname" />
         </div>
         <div class="form-group">
             <label asp-for="Password">Enter Password</label>
-            <input asp-for="Password" />
+            <input class="form-control" asp-for="Password" />
             <span asp-validation-for="Password" />
         </div>
         <div class="form-group">
-            <input type="submit" value="Login" class="btn" />
+            <input type="submit" class="btn btn-success" value="Login" />
         </div>
     </div>
 </form>
