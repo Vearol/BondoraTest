@@ -43,6 +43,8 @@ namespace TestApp.Controllers
                 {
                     await Authenticate(model.LoginNickname);
 
+                    _logger.LogInformation($"User with login:{model.LoginNickname} has just logged in.");
+
                     return RedirectToAction("List", "Equipment");
                 }
 
@@ -72,6 +74,8 @@ namespace TestApp.Controllers
 
                     await Authenticate(model.LoginNickname);
 
+                    _logger.LogInformation($"Registered new user. login:{model.LoginNickname}.");
+
                     return RedirectToAction("List", "Equipment");
                 }
 
@@ -96,6 +100,9 @@ namespace TestApp.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            _logger.LogInformation($"User with login:{User.Identity.Name} has just logged out.");
+
             return RedirectToAction("List", "Equipment");
         }
     }

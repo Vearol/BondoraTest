@@ -168,7 +168,10 @@ namespace TestApp.Controllers
                     var loyaltyPoints = orderItems.Select(orderItem =>
                             new RentFee(orderItem.Equipment.Type, orderItem.RentDurationInDays))
                         .Select(rentFee => rentFee.CalculateLoyaltyPoints()).Sum();
+
                     user.ExtraPoints += loyaltyPoints;
+
+                    _logger.LogInformation($"User with login:{User.Identity.Name} has checked out his order and scored {loyaltyPoints} loyaltyPoints.");
                 }
             }
 

@@ -22,6 +22,8 @@ namespace TestApp.Tests
         {
             try
             {
+                //todo create db for testing
+
                 var context = _contextFactory.CreateDbContext(null);
                 context.Database.Migrate();
                 SeedData.Initialize(context);
@@ -35,10 +37,8 @@ namespace TestApp.Tests
         [Test]
         public void Index_ReturnsAViewResult_WithAListOfProducts()
         {
-            var storeContextFactory = new StoreContextFactory();
-
             var logger = new Mock<ILogger<EquipmentController>>();
-            var controller = new EquipmentController(logger.Object, new EquipmentItemRepository(storeContextFactory.CreateDbContext(null)));
+            var controller = new EquipmentController(logger.Object, new EquipmentItemRepository(_contextFactory.CreateDbContext(null)));
 
             var sessionStub = new Mock<ISession>();
             var httpContextStub = new Mock<HttpContext>();
@@ -56,8 +56,7 @@ namespace TestApp.Tests
         [Test]
         public void Order_AddsItemToCart()
         {
-            var storeContextFactory = new StoreContextFactory();
-            var context = storeContextFactory.CreateDbContext(null);
+            var context = _contextFactory.CreateDbContext(null);
 
             var logger = new Mock<ILogger<CartController>>();
             var controller = new CartController(logger.Object, new OrderItemRepository(context), new OrderRepository(context), 
@@ -88,8 +87,7 @@ namespace TestApp.Tests
         [Test]
         public void Remove_RemovesItemFromCart()
         {
-            var storeContextFactory = new StoreContextFactory();
-            var context = storeContextFactory.CreateDbContext(null);
+            var context = _contextFactory.CreateDbContext(null);
 
             var logger = new Mock<ILogger<CartController>>();
             var controller = new CartController(logger.Object, new OrderItemRepository(context), new OrderRepository(context), 
